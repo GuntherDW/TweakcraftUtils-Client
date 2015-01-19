@@ -15,7 +15,7 @@ public class TCUtilsClientModObf extends Obf {
     public static final TCUtilsClientModObf getLocationSkinmthd         = new TCUtilsClientModObf("func_110306_p",  "i",    "getLocationSkin");
     public static final TCUtilsClientModObf getLocationCapemthd         = new TCUtilsClientModObf("func_178837_g",  "h",    "getLocationCape");
     public static final TCUtilsClientModObf passSpecialRenderermthd     = new TCUtilsClientModObf("func_77033_b",   "b",    "passSpecialRender");
-    public static final TCUtilsClientModObf canRenderNamemthd           = new TCUtilsClientModObf("func_177070_b",  "b",    "canRenderName");
+    public static final TCUtilsClientModObf canRenderNamemthd           = new TCUtilsClientModObf("func_110813_b",  "a",    "canRenderName");
 
     /**
      * @param seargeName

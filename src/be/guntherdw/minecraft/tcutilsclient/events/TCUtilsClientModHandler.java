@@ -218,7 +218,7 @@ public class TCUtilsClientModHandler {
         for (String line : lines) {
             String[] split = line.split(",");
             if (split.length == 2) {
-                System.out.println("Received skin for "+split[0]+"\t"+split[1]);
+                modInstance.log.debug("Received skin for "+split[0]+"\t"+split[1]);
                 if (split[1].equals("null")) skins.remove(split[0]);
                 else skins.put(split[0], split[1]);
 
