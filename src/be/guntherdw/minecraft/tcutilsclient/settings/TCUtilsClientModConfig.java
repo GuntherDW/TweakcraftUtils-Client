@@ -14,6 +14,7 @@ public class TCUtilsClientModConfig {
     private Minecraft mcInstance;
 
     public static boolean fullBrightNames = false;
+    public static boolean drawNamesWithShadow = false;
 
     public TCUtilsClientModConfig(Minecraft mc) {
         this.mcInstance = mc;
@@ -24,6 +25,7 @@ public class TCUtilsClientModConfig {
         try {
             PrintWriter printWriter = new PrintWriter(new FileWriter(configFile));
             printWriter.println("tcutils-fullbrightnames:"+fullBrightNames);
+            printWriter.println("tcutils-addshadowtonames:"+drawNamesWithShadow);
             printWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,6 +42,9 @@ public class TCUtilsClientModConfig {
                 if(split[0].equals("tcutils-fullbrightnames")) {
                     fullBrightNames = split[1].equalsIgnoreCase("true");
                 }
+                if (split[0].equals("tcutils-addshadowtonames")) {
+                    drawNamesWithShadow = split[1].equalsIgnoreCase("true");
+                }
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
@@ -48,21 +53,4 @@ public class TCUtilsClientModConfig {
             e.printStackTrace();
         }
     }
-
-    /* public enum Options {
-        FULLBRIGHTNAMES("FBNAMES", 0, false, "Fullbright Names");
-
-        private String identifier;
-        private int id;
-        private boolean defaultValue;
-        private String optionname;
-
-        Options(String identifier, int id, boolean defaultValue, String optionname) {
-            this.identifier = identifier;
-            this.id = id;
-            this.defaultValue = defaultValue;
-            this.optionname = optionname;
-        }
-    } */
-
 }

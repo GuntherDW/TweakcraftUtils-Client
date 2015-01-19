@@ -54,9 +54,9 @@ public class TCUtilsClientModHandler {
     }
 
     public void addAsked(String playername) {
-        if(!canAsk) return;
-        if(asked.contains(playername)) return;
-        modInstance.log.debug("Adding toAsk for "+playername);
+        if (!canAsk) return;
+        if (asked.contains(playername)) return;
+        modInstance.log.debug("Adding toAsk for " + playername);
         asked.add(playername);
         toAsk.add(playername);
 
@@ -104,17 +104,17 @@ public class TCUtilsClientModHandler {
             byte controlByte = bytes[0];
             if (controlByte >= 50 && controlByte < 60) {
                 pm = packetMode.NICK;
-                if(!canAsk) canAsk = true;
+                if (!canAsk) canAsk = true;
                 // System.out.println("Nick mode selected");
-                if(controlByte == 50) nicks.clear();
+                if (controlByte == 50) nicks.clear();
             } else if (controlByte >= 60 && controlByte < 70) {
                 pm = packetMode.CAPE;
                 // System.out.println("Cape mode selected");
-                if(controlByte == 60) capes.clear();
+                if (controlByte == 60) capes.clear();
             } else if (controlByte >= 70 && controlByte < 80) {
                 pm = packetMode.ANIMAL;
                 // System.out.println("Animal mode selected");
-                if(controlByte == 70) animals.clear();
+                if (controlByte == 70) animals.clear();
             }
 
             byte b1;
@@ -187,22 +187,10 @@ public class TCUtilsClientModHandler {
                 if (split[1].equals("null"))
                     nicks.remove(split[0]);
                 else {
-                    // System.out.println("Adding nick for " + split[0] + " -> " + split[1]);
-                    modInstance.log.debug("Received nick for " + split[0] + " -> "+split[1]);
+                    modInstance.log.debug("Received nick for " + split[0] + " -> " + split[1]);
                     addNick(split[0], split[1]);
                 }
             }
         }
     }
-
-    /*public void setCloak(qx player, String playername) {
-            qx playerModel = ModLoader.getMinecraftInstance().g;
-            if (playerModel.bR.equals(playername)) {
-                playerModel.cz = playerModel.cv = getCloak(playername);
-                ModLoader.getMinecraftInstance().o.a(playerModel.cz, (bat) (new bax()));
-            } else {
-                player.cz = player.cv = getCloak(playername);
-                ModLoader.getMinecraftInstance().o.a(player.cz, (bat) (new bax()));
-            }
-        }*/
 }

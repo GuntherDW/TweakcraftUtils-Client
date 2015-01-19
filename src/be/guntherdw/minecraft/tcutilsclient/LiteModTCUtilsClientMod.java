@@ -40,15 +40,12 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
     private final String IMPROVCHAT_CHANNEL = "ImprovedChat";
     private final String TCNICK_CHANNEL = "TCUtils:nick";
 
-    private static Pattern colorTags = Pattern.compile("(\u00a7|&c)[0-9a-fA-FkKlLmMnNoOrR]|/&c");
     protected static String curChannel = null;
 
     protected Minecraft mcInstance;
-    // public static boolean infDuraEnabled = false;
     public Logger log;
 
     private boolean checked = false;
-
     protected boolean helloSent = false;
     private boolean shouldSendPackets = false;
 
@@ -58,7 +55,6 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
     private static final int DELAYED_ASK_TICKS = 20;
 
     private TCUtilsClientModHandler nicksHandler;
-
     protected static LiteModTCUtilsClientMod instance;
 
     private boolean sendRegisterPacket = false;
@@ -66,15 +62,12 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
     public LiteModTCUtilsClientMod() {
         this.mcInstance = Minecraft.getMinecraft();
         this.channels = new ArrayList<String>();
-        channels.add(IMPROVCHAT_CHANNEL);
-        channels.add(TCNICK_CHANNEL);
-
+        channels.addAll(Arrays.asList(new String[]{IMPROVCHAT_CHANNEL, TCNICK_CHANNEL}));
         this.log = LiteLoaderLogger.getLogger();
 
         nicksHandler = new TCUtilsClientModHandler(this);
         instance = this;
-
-        log.setLevel(Level.DEBUG);
+        // log.setLevel(Level.DEBUG);
     }
 
     public static LiteModTCUtilsClientMod getInstance() {
@@ -214,24 +207,15 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
                         String chatModeString = "";
                         byte[] cleanData = new byte[packetBytes.length - 1];
                         System.arraycopy(packetBytes, 1, cleanData, 0, packetBytes.length - 1);
-                        // chatModeString = toString(bis).replace("&c", "§");
-                        chatModeString = new String(cleanData, "UTF-8");
-                        chatModeString = chatModeString.replaceAll("&c", "§");
-                        // System.out.println("chatModeString = " + chatModeString);
+                        chatModeString = new String(cleanData, "UTF-8").replaceAll("&c", "§");
 
                         if (chatModeString.equals("null")) {
-                            // TODO : SET NULL
-                            // getCurrentServer().ChatMode = null;
                             curChannel = null;
                         } else {
-                            // TODO : SET CHATMODE
-                            // getCurrentServer().ChatMode = chatModeString;
                             curChannel = chatModeString;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        // TODO : SET NULL
-                        // getCurrentServer().ChatMode = null;
                         curChannel = null;
                     }
                 }
@@ -295,7 +279,6 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
         if(!inGame) return;
 
         if (mcInstance.ingameGUI.getChatGUI().getChatOpen() && curChannel != null) {
-            GuiNewChat chatGUI = mcInstance.ingameGUI.getChatGUI();
             ScaledResolution scaledResolution = new ScaledResolution(mcInstance, mcInstance.displayWidth, mcInstance.displayHeight);
             int x1, x2;
             int y1, y2;
@@ -305,12 +288,8 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
             y1 = scaledResolution.getScaledHeight() - 16;
             y2 = y1 - getFontRenderer().FONT_HEIGHT;
 
-            // System.out.println("y1: "+y1+"  y2: "+y2+"  x1:"+x1+"  x2:"+x2);
             Gui.drawRect(x1 - 2, y2 - 1, x2 + 2, y1 + 1, 0x77000000);
             getFontRenderer().drawStringWithShadow(curChannel, x1, y2, 0xFFFFFF);
-
-
-            // new ScaledResolution(this.gameSettings, this.displayWidth, this.displayHeight);
         }
 
         if(!checked) {
@@ -351,14 +330,6 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
                 delayedAsk--;
             }
         }
-
-        /* if(!LiteLoader.getClientPluginChannels().isRemoteChannelRegistered(IMPROVCHAT_CHANNEL)) {
-            minecraft.fontRendererObj.drawString("Improvchat not enabled?", 5, 5, 0xFF00FFFF);
-        } */
-
-        // if (type.contains(TickType.RENDER)) {
-
-        // }
     }
 
     /**

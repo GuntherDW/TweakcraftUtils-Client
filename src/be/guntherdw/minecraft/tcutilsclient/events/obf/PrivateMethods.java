@@ -1,6 +1,4 @@
-package be.guntherdw.minecraft.tcutilsclient.events;
-
-import be.guntherdw.minecraft.tcutilsclient.events.obf.TCUtilsClientModObf;
+package be.guntherdw.minecraft.tcutilsclient.events.obf;
 
 import com.mumfrey.liteloader.core.runtime.Obf;
 import com.mumfrey.liteloader.util.ObfuscationUtilities;
@@ -120,8 +118,6 @@ public class PrivateMethods<P, R> {
     }
 
     public static final PrivateMethods<RendererLivingEntity, Boolean>       canRenderName = new PrivateMethods<RendererLivingEntity, Boolean>(RendererLivingEntity.class, TCUtilsClientModObf.canRenderNamemthd,           EntityLivingBase.class);
-    public static final PrivateMethods<Render, Void>              renderOffsetLivingLabel = new PrivateMethods<Render,               Void>   (Render.class,               TCUtilsClientModObf.renderOffsetLivingLabelmthd, Entity.class, double.class, double.class, double.class, String.class, float.class, double.class);
-
     // public static final TCUtilsPrivAccessHandler<RenderManager, Double>               canRenderName     = new TCUtilsPrivAccessHandler<RenderManager, Double>(RenderManager.class, TCUtilsClientModObf.EntityLivingBasecls);
 
 }
