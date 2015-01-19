@@ -1,5 +1,6 @@
 package be.guntherdw.minecraft.tcutilsclient.events;
 
+import be.guntherdw.minecraft.tcutilsclient.LiteModTCUtilsClientMod;
 import net.minecraft.client.renderer.IImageBuffer;
 
 import java.awt.Graphics;
@@ -20,17 +21,20 @@ public class TCUtilsClientModSkinsParser implements IImageBuffer {
     private int multiplier = 1;
 
     public BufferedImage parseUserSkin(BufferedImage bufferedImage) {
+
+        LiteModTCUtilsClientMod modInstance = LiteModTCUtilsClientMod.getInstance();
+
         if (bufferedImage == null) {
-            System.out.println("bufferedImage was null!");
+            modInstance.log.debug("bufferedImage was null!");
             return null;
         } else {
             multiplier = bufferedImage.getWidth() / 64;
-            System.out.println("Image multiplier detected as "+multiplier);
-            System.out.println("Image size : "+bufferedImage.getWidth()+"x"+bufferedImage.getHeight());
+            modInstance.log.debug("Image multiplier detected as " + multiplier);
+            modInstance.log.debug("Image size : " + bufferedImage.getWidth() + "x" + bufferedImage.getHeight());
             boolean imageInOldFormat = bufferedImage.getWidth() != bufferedImage.getHeight();
-            if(imageInOldFormat) System.out.println("Skin was in old format!");
+            if(imageInOldFormat) modInstance.log.debug("Skin was in old format!");
             if(bufferedImage.getWidth() % 64 != 0) {
-                System.out.println("Skin was not cleanly dividable by 64, quitting!");
+                modInstance.log.debug("Skin was not cleanly dividable by 64, quitting!");
                 return null;
             }
 
@@ -58,8 +62,6 @@ public class TCUtilsClientModSkinsParser implements IImageBuffer {
             graphics.dispose();
 
             this.imageData = ((DataBufferInt) bufferedImage_temp.getRaster().getDataBuffer()).getData();
-
-            System.out.println("int[] size : "+imageData.length);
 
             this.setAreaOpaque     ( 0,                0,              32 * multiplier, 16 * multiplier);
             this.setAreaTransparent(32 * multiplier,   0,              64 * multiplier, 32 * multiplier);
