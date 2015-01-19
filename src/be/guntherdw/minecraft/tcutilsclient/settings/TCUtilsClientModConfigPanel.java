@@ -47,6 +47,12 @@ public class TCUtilsClientModConfigPanel extends Gui implements ConfigPanel {
         return controlList.size() * CONTROL_SPACING;
     }
 
+    private void addOption(int id, int x, int y, boolean checked, String text) {
+        GuiCheckbox cb = new GuiCheckbox(id, x, y, text);
+        cb.checked = checked;
+        controlList.add(cb);
+    }
+
     /**
      * Called when the panel is displayed, initialise the panel (read settings, etc)
      *
@@ -63,9 +69,8 @@ public class TCUtilsClientModConfigPanel extends Gui implements ConfigPanel {
         this.controlList.clear();
         int top = 13;
 
-        GuiCheckbox cb = new GuiCheckbox(id, 24, top + spot * CONTROL_SPACING, "Fullbright Names");
-        cb.checked = TCUtilsClientModConfig.fullBrightNames;
-        controlList.add(cb);
+        addOption(0, 24, 13,                   TCUtilsClientModConfig.fullBrightNames,     "Fullbright names");
+        addOption(1, 24, 13 + CONTROL_SPACING, TCUtilsClientModConfig.drawNamesWithShadow, "Add shadow backing to names");
     }
 
     /**
@@ -138,9 +143,11 @@ public class TCUtilsClientModConfigPanel extends Gui implements ConfigPanel {
         if (control instanceof GuiCheckbox) {
             GuiCheckbox chk = (GuiCheckbox) control;
             chk.checked = !chk.checked;
-            TCUtilsClientModConfig.fullBrightNames = chk.checked;
-            /* KaboModSettings.Options option = KaboModSettings.Options.getEnumOptions(control.id);
-            KaboModSettings.instance.setOptionValue(option, 0); */
+            if(control.id == 0)
+                TCUtilsClientModConfig.fullBrightNames = chk.checked;
+            if(control.id == 1)
+                TCUtilsClientModConfig.drawNamesWithShadow = chk.checked;
+
         }
     }
 

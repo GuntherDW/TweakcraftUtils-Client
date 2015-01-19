@@ -2,7 +2,10 @@ package be.guntherdw.minecraft.tcutilsclient.events;
 
 import be.guntherdw.minecraft.tcutilsclient.LiteModTCUtilsClientMod;
 import be.guntherdw.minecraft.tcutilsclient.packages.TCUtilsClientModAnimalInformation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
 
@@ -13,7 +16,7 @@ public class TCUtilsClientModHandler {
 
     private LiteModTCUtilsClientMod modInstance;
 
-    public enum packetMode {NICK, CAPE, ANIMAL, OTHER}
+    public enum packetMode {NICK, CAPE, SKIN, ANIMAL, OTHER}
 
     /* Temp collections */
 
@@ -25,6 +28,7 @@ public class TCUtilsClientModHandler {
 
     private Map<String, String> nicks;
     private Map<String, String> capes;
+    private Map<String, String> skins;
     private Map<Integer, TCUtilsClientModAnimalInformation> animals;
 
     public TCUtilsClientModHandler(LiteModTCUtilsClientMod modInstance) {
@@ -33,6 +37,7 @@ public class TCUtilsClientModHandler {
         toAsk = new ArrayList<String>();
         nicks = new HashMap<String, String>();
         capes = new HashMap<String, String>();
+        skins = new HashMap<String, String>();
         animals = new HashMap<Integer, TCUtilsClientModAnimalInformation>();
     }
 
@@ -45,10 +50,32 @@ public class TCUtilsClientModHandler {
     }
 
     public void reInit() {
+        // Reinit capes/skin cache
+
+        // TODO : Make it less buggy
+
+        /* TextureManager tm = Minecraft.getMinecraft().getTextureManager();
+        for (String s : capes.keySet()) {
+            ResourceLocation tmp = new ResourceLocation("capes/" + s.toLowerCase());
+            if (tm.getTexture(tmp) != null) {
+                System.out.println("Deleting local cached cape for "+s);
+                tm.deleteTexture(tmp);
+            }
+
+        }
+        for (String s : skins.keySet()) {
+            ResourceLocation tmp = new ResourceLocation("hdskins/" + s.toLowerCase());
+            if (tm.getTexture(tmp) != null) {
+                System.out.println("Deleting local cached skin for "+s);
+                tm.deleteTexture(tmp);
+            }
+        } */
+
         toAsk.clear();
         asked.clear();
         nicks.clear();
         capes.clear();
+        skins.clear();
         animals.clear();
         canAsk = false;
     }
@@ -72,19 +99,27 @@ public class TCUtilsClientModHandler {
     }
 
     public boolean hasNick(String player) {
-        return nicks.get(player.toLowerCase()) != null;
+        return nicks.get(player) != null;
+    }
+
+    public boolean hasSkin(String player) {
+        return skins.get(player) != null;
     }
 
     public void addNick(String player, String nick) {
-        nicks.put(player.toLowerCase(), nick);
+        nicks.put(player, nick);
     }
 
     public String getNick(String player) {
-        return nicks.get(player.toLowerCase());
+        return nicks.get(player);
     }
 
     public Map<String, String> getCapes() {
         return capes;
+    }
+
+    public Map<String, String> getSkins() {
+        return skins;
     }
 
     public Map<Integer, TCUtilsClientModAnimalInformation> getAnimals() {
@@ -92,6 +127,7 @@ public class TCUtilsClientModHandler {
     }
 
     public void receivePacket(PacketBuffer data) {
+        // 40-50 Skins
         // 50-60 Nicks
         // 60-70 Capes
         // 70-80 Animals
@@ -99,21 +135,21 @@ public class TCUtilsClientModHandler {
         byte[] bytes = data.array();
         packetMode pm = packetMode.OTHER;
         if (bytes.length > 0) {
-
             String line = "";
             byte controlByte = bytes[0];
-            if (controlByte >= 50 && controlByte < 60) {
+
+            if (controlByte >= 40 && controlByte < 50) {
+                pm = packetMode.SKIN;
+                if (controlByte == 40) skins.clear();
+            } else if (controlByte >= 50 && controlByte < 60) {
                 pm = packetMode.NICK;
                 if (!canAsk) canAsk = true;
-                // System.out.println("Nick mode selected");
                 if (controlByte == 50) nicks.clear();
             } else if (controlByte >= 60 && controlByte < 70) {
                 pm = packetMode.CAPE;
-                // System.out.println("Cape mode selected");
                 if (controlByte == 60) capes.clear();
             } else if (controlByte >= 70 && controlByte < 80) {
                 pm = packetMode.ANIMAL;
-                // System.out.println("Animal mode selected");
                 if (controlByte == 70) animals.clear();
             }
 
@@ -137,10 +173,13 @@ public class TCUtilsClientModHandler {
 
             switch (pm) {
                 case NICK:
-                    parseLines(lines);
+                    parseNicks(lines);
                     break;
                 case CAPE:
                     parseCapes(lines);
+                    break;
+                case SKIN:
+                    parseSkins(lines);
                     break;
                 case ANIMAL:
                     parseAnimals(lines);
@@ -155,15 +194,10 @@ public class TCUtilsClientModHandler {
         for (String line : lines) {
             String[] split = line.split(",");
             if (split.length == 2) {
-                if (split[1].equals("null"))
-                    capes.remove(split[0]);
-                else {
-                    // System.out.println("Adding cape for "+split[0]+ " (url : "+split[1]+")");
-                    capes.put(split[0].toLowerCase(), split[1]);
-                }
-            } else {
-                modInstance.log.debug("unknown line (" + split.length + ") : " + line);
-            }
+                if (split[1].equals("null")) capes.remove(split[0]);
+                else capes.put(split[0], split[1]);
+
+            } else modInstance.log.debug("unknown line (" + split.length + ") : " + line);
         }
     }
 
@@ -180,12 +214,23 @@ public class TCUtilsClientModHandler {
         }
     }
 
-    private void parseLines(List<String> lines) {
+    private void parseSkins(List<String> lines) {
         for (String line : lines) {
             String[] split = line.split(",");
             if (split.length == 2) {
-                if (split[1].equals("null"))
-                    nicks.remove(split[0]);
+                System.out.println("Received skin for "+split[0]+"\t"+split[1]);
+                if (split[1].equals("null")) skins.remove(split[0]);
+                else skins.put(split[0], split[1]);
+
+            } else modInstance.log.debug("unknown line (" + split.length + ") : " + line);
+        }
+    }
+
+    private void parseNicks(List<String> lines) {
+        for (String line : lines) {
+            String[] split = line.split(",");
+            if (split.length == 2) {
+                if (split[1].equals("null")) nicks.remove(split[0]);
                 else {
                     modInstance.log.debug("Received nick for " + split[0] + " -> " + split[1]);
                     addNick(split[0], split[1]);

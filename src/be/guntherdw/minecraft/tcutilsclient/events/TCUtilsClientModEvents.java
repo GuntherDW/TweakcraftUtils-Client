@@ -11,11 +11,10 @@ import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -28,16 +27,14 @@ public class TCUtilsClientModEvents {
         TCUtilsClientModHandler nh = LiteModTCUtilsClientMod.getInstance().getNicksHandler();
         NetworkPlayerInfo source = returnEventInfo.getSource();
         String playerName = source.getGameProfile().getName();
-        String playerNamel= playerName.toLowerCase();
-        if(nh.getCapes().containsKey(playerNamel)) {
-            String resourceurl = "capes/"+playerNamel;
-            String url = nh.getCapes().get(playerNamel);
+        if(nh.getCapes().containsKey(playerName)) {
+            String resourceurl = "capes/"+playerName.toLowerCase();
+            String url = nh.getCapes().get(playerName);
             ResourceLocation rl = new ResourceLocation(resourceurl);
             TextureManager tm = Minecraft.getMinecraft().getTextureManager();
             ITextureObject ito = tm.getTexture(rl);
 
             if (ito == null) {
-                final ImageBufferDownload ibd = new ImageBufferDownload();
                 ito = new ThreadDownloadImageData(null, url, null, new IImageBuffer() {
                     @Override
                     public BufferedImage parseUserSkin(BufferedImage bufferedImage) {
@@ -45,11 +42,47 @@ public class TCUtilsClientModEvents {
                     }
                     @Override
                     public void skinAvailable() {
-                        ibd.skinAvailable();
+                        /* ibd.skinAvailable(); */
                     }
                 });
                 tm.loadTexture(rl, ito);
             }
+
+            returnEventInfo.setReturnValue(rl);
+            returnEventInfo.cancel();
+        }
+    }
+
+    public static void onGetLocationSkin(ReturnEventInfo<NetworkPlayerInfo, ResourceLocation> returnEventInfo) {
+        TCUtilsClientModHandler nh = LiteModTCUtilsClientMod.getInstance().getNicksHandler();
+        NetworkPlayerInfo source = returnEventInfo.getSource();
+        String playerName = source.getGameProfile().getName();
+        if (nh.getSkins().containsKey(playerName)) {
+            String resourceurl = "hdskins/" + playerName.toLowerCase();
+            String url = nh.getSkins().get(playerName);
+            ResourceLocation rl = new ResourceLocation(resourceurl);
+            TextureManager tm = Minecraft.getMinecraft().getTextureManager();
+            final TCUtilsClientModSkinsParser tcUtilsClientModSkinsParser = new TCUtilsClientModSkinsParser();
+            final ImageBufferDownload imageBufferDownload = new ImageBufferDownload();
+            ITextureObject ito = tm.getTexture(rl);
+
+            if(ito == null) {
+                System.out.println("Getting new skin for "+playerName+" from "+url);
+                ito = new ThreadDownloadImageData(null, url, DefaultPlayerSkin.getDefaultSkinLegacy(), new IImageBuffer() {
+                    @Override
+                    public BufferedImage parseUserSkin(BufferedImage bufferedImage) {
+                        bufferedImage = tcUtilsClientModSkinsParser.parseUserSkin(bufferedImage);
+                        return bufferedImage;
+                    }
+
+                    @Override
+                    public void skinAvailable() {
+                        tcUtilsClientModSkinsParser.skinAvailable();
+                    }
+                });
+                tm.loadTexture(rl, ito);
+            }
+
 
             returnEventInfo.setReturnValue(rl);
             returnEventInfo.cancel();
