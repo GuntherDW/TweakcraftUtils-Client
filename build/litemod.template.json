@@ -1,0 +1,11 @@
+{
+    "name": "TCUtils-Clientmod",
+    "mcversion": "${litemodversion}",
+    "version": "${version}",
+    "revision": "${build.number}",
+    "author": "${author}",
+    "description": "A small clientside mod to go alongside the server mods",
+    "classTransformerClasses" : [
+      "be.guntherdw.minecraft.tcutilsclient.TCUtilsClientModTransformer"
+    ]
+}

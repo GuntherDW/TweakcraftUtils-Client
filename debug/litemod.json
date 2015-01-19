@@ -1,0 +1,11 @@
+{
+  "name" : "TCUtils-Clientmod",
+  "author": "TweakCraft",
+  "description": "A small clientside mod to go alongside the server mods",
+  "version": "1.0",
+  "revision": "MCP",
+  "mcversion": "1.8.0",
+  "classTransformerClasses" : [
+    "be.guntherdw.minecraft.tcutilsclient.TCUtilsClientModTransformer"
+  ]
+}
