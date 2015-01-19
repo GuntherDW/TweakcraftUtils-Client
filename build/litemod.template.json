@@ -6,6 +6,6 @@
     "author": "${author}",
     "description": "A small clientside mod to go alongside the server mods",
     "classTransformerClasses" : [
-      "be.guntherdw.minecraft.tcutilsclient.TCUtilsClientModTransformer"
+      "be.guntherdw.minecraft.tcutilsclient.events.TCUtilsClientModTransformer"
     ]
 }
