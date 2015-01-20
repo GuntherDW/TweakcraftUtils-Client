@@ -1,6 +1,7 @@
 package be.guntherdw.minecraft.tcutilsclient;
 
 import be.guntherdw.minecraft.tcutilsclient.events.TCUtilsClientModHandler;
+import be.guntherdw.minecraft.tcutilsclient.settings.TCUtilsClientModConfig;
 import be.guntherdw.minecraft.tcutilsclient.settings.TCUtilsClientModConfigPanel;
 import com.google.common.collect.ImmutableList;
 import com.mojang.realmsclient.dto.RealmsServer;
@@ -55,7 +56,9 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
     private static final int DELAYED_ASK_TICKS = 20;
 
     private TCUtilsClientModHandler nicksHandler;
+    private TCUtilsClientModConfig tcUtilsClientModConfig;
     protected static LiteModTCUtilsClientMod instance;
+
 
     private boolean sendRegisterPacket = false;
 
@@ -67,7 +70,7 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
 
         nicksHandler = new TCUtilsClientModHandler(this);
         instance = this;
-        // log.setLevel(Level.DEBUG);
+        log.setLevel(Level.DEBUG);
     }
 
     public static LiteModTCUtilsClientMod getInstance() {
@@ -164,7 +167,12 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
      */
     @Override
     public void init(File configPath) {
+        tcUtilsClientModConfig = new TCUtilsClientModConfig(mcInstance);
+        tcUtilsClientModConfig.loadConfig();
+    }
 
+    public TCUtilsClientModConfig getTCUtilsClientModConfig() {
+        return tcUtilsClientModConfig;
     }
 
     /**

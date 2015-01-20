@@ -4,6 +4,7 @@ package be.guntherdw.minecraft.tcutilsclient.events;
 import be.guntherdw.minecraft.tcutilsclient.LiteModTCUtilsClientMod;
 import be.guntherdw.minecraft.tcutilsclient.events.obf.PrivateMethods;
 import be.guntherdw.minecraft.tcutilsclient.settings.TCUtilsClientModConfig;
+import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.transformers.event.EventInfo;
 import com.mumfrey.liteloader.transformers.event.ReturnEventInfo;
 import net.minecraft.client.Minecraft;
@@ -28,13 +29,14 @@ public class TCUtilsClientModEvents {
         NetworkPlayerInfo source = returnEventInfo.getSource();
         String playerName = source.getGameProfile().getName();
         if(nh.getCapes().containsKey(playerName)) {
-            String resourceurl = "capes/"+playerName.toLowerCase();
+            String resourceurl = "tcutils:capes/"+playerName.toLowerCase();
             String url = nh.getCapes().get(playerName);
             ResourceLocation rl = new ResourceLocation(resourceurl);
             TextureManager tm = Minecraft.getMinecraft().getTextureManager();
             ITextureObject ito = tm.getTexture(rl);
 
             if (ito == null) {
+                LiteModTCUtilsClientMod.getInstance().log.debug("Getting new cape for " + playerName + " from " + url);
                 ito = new ThreadDownloadImageData(null, url, null, new IImageBuffer() {
                     @Override
                     public BufferedImage parseUserSkin(BufferedImage bufferedImage) {
@@ -58,7 +60,7 @@ public class TCUtilsClientModEvents {
         NetworkPlayerInfo source = returnEventInfo.getSource();
         String playerName = source.getGameProfile().getName();
         if (nh.getSkins().containsKey(playerName)) {
-            String resourceurl = "hdskins/" + playerName.toLowerCase();
+            String resourceurl = "tcutils:hdskins/" + playerName.toLowerCase();
             String url = nh.getSkins().get(playerName);
             ResourceLocation rl = new ResourceLocation(resourceurl);
             TextureManager tm = Minecraft.getMinecraft().getTextureManager();
@@ -67,7 +69,7 @@ public class TCUtilsClientModEvents {
             ITextureObject ito = tm.getTexture(rl);
 
             if(ito == null) {
-                System.out.println("Getting new skin for "+playerName+" from "+url);
+                LiteModTCUtilsClientMod.getInstance().log.debug("Getting new skin for " + playerName + " from " + url);
                 ito = new ThreadDownloadImageData(null, url, DefaultPlayerSkin.getDefaultSkinLegacy(), new IImageBuffer() {
                     @Override
                     public BufferedImage parseUserSkin(BufferedImage bufferedImage) {
@@ -81,6 +83,7 @@ public class TCUtilsClientModEvents {
                     }
                 });
                 tm.loadTexture(rl, ito);
+                // source.getSkinType()
             }
 
 
@@ -158,8 +161,8 @@ public class TCUtilsClientModEvents {
                         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                         GL11.glEnable(GL11.GL_BLEND);
                         GL11.glDisable(GL11.GL_LIGHTING);
-                        GL11.glDepthMask(false);
-                        GL11.glDisable(GL11.GL_DEPTH_TEST);
+                        // GL11.glDepthMask(false);
+                        // GL11.glDisable(GL11.GL_DEPTH_TEST);
 
                         boolean foggy = GL11.glIsEnabled(GL11.GL_FOG);
                         GL11.glDisable(GL11.GL_FOG);
@@ -175,8 +178,8 @@ public class TCUtilsClientModEvents {
                         if (foggy) {
                             GL11.glEnable(GL11.GL_FOG);
                         }
-                        GL11.glEnable(GL11.GL_DEPTH_TEST);
-                        GL11.glDepthMask(true);
+                        // GL11.glEnable(GL11.GL_DEPTH_TEST);
+                        // GL11.glDepthMask(true);
                         GL11.glEnable(GL11.GL_LIGHTING);
                         GL11.glDisable(GL11.GL_BLEND);
 

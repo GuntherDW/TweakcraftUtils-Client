@@ -56,7 +56,7 @@ public class TCUtilsClientModHandler {
 
         /* TextureManager tm = Minecraft.getMinecraft().getTextureManager();
         for (String s : capes.keySet()) {
-            ResourceLocation tmp = new ResourceLocation("capes/" + s.toLowerCase());
+            ResourceLocation tmp = new ResourceLocation("tcutils:capes/" + s.toLowerCase());
             if (tm.getTexture(tmp) != null) {
                 System.out.println("Deleting local cached cape for "+s);
                 tm.deleteTexture(tmp);
@@ -64,7 +64,7 @@ public class TCUtilsClientModHandler {
 
         }
         for (String s : skins.keySet()) {
-            ResourceLocation tmp = new ResourceLocation("hdskins/" + s.toLowerCase());
+            ResourceLocation tmp = new ResourceLocation("tcutils:hdskins/" + s.toLowerCase());
             if (tm.getTexture(tmp) != null) {
                 System.out.println("Deleting local cached skin for "+s);
                 tm.deleteTexture(tmp);
@@ -194,6 +194,8 @@ public class TCUtilsClientModHandler {
         for (String line : lines) {
             String[] split = line.split(",");
             if (split.length == 2) {
+                modInstance.log.debug("Received cape for "+split[0]+"\t"+split[1]);
+
                 if (split[1].equals("null")) capes.remove(split[0]);
                 else capes.put(split[0], split[1]);
 

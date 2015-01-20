@@ -27,7 +27,6 @@ public class TCUtilsClientModConfigPanel extends Gui implements ConfigPanel {
 
     public TCUtilsClientModConfigPanel() {
         this.mc = Minecraft.getMinecraft();
-        this.config = new TCUtilsClientModConfig(mc);
     }
 
 
@@ -61,6 +60,7 @@ public class TCUtilsClientModConfigPanel extends Gui implements ConfigPanel {
     @Override
     public void onPanelShown(ConfigPanelHost host) {
         this.mod = host.getMod();
+        this.config = mod.getTCUtilsClientModConfig();
         this.config.loadConfig();
 
         int id = 0;

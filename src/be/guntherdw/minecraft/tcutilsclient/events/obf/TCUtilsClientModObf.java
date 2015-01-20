@@ -12,8 +12,8 @@ public class TCUtilsClientModObf extends Obf {
     public static final TCUtilsClientModObf RenderLivingEntitycls       = new TCUtilsClientModObf("net.minecraft.client.renderer.entity.RendererLivingEntity", "cqv");
     public static final TCUtilsClientModObf EntityLivingBasecls         = new TCUtilsClientModObf("net.minecraft.entity.EntityLivingBase",                     "xm");
 
-    public static final TCUtilsClientModObf getLocationSkinmthd         = new TCUtilsClientModObf("func_110306_p",  "i",    "getLocationSkin");
-    public static final TCUtilsClientModObf getLocationCapemthd         = new TCUtilsClientModObf("func_178837_g",  "h",    "getLocationCape");
+    public static final TCUtilsClientModObf getLocationCapemthd         = new TCUtilsClientModObf("func_178861_h",  "h",    "getLocationCape");
+    public static final TCUtilsClientModObf getLocationSkinmthd         = new TCUtilsClientModObf("func_178837_g",  "g",    "getLocationSkin");
     public static final TCUtilsClientModObf passSpecialRenderermthd     = new TCUtilsClientModObf("func_77033_b",   "b",    "passSpecialRender");
     public static final TCUtilsClientModObf canRenderNamemthd           = new TCUtilsClientModObf("func_110813_b",  "a",    "canRenderName");
 
