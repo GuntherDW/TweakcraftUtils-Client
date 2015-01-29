@@ -15,6 +15,7 @@ public class TCUtilsClientModConfig {
 
     public static boolean fullBrightNames = false;
     public static boolean drawNamesWithShadow = false;
+    public static boolean debugLogging = false;
 
     public TCUtilsClientModConfig(Minecraft mc) {
         this.mcInstance = mc;
@@ -26,6 +27,7 @@ public class TCUtilsClientModConfig {
             PrintWriter printWriter = new PrintWriter(new FileWriter(configFile));
             printWriter.println("tcutils-fullbrightnames:"+fullBrightNames);
             printWriter.println("tcutils-addshadowtonames:"+drawNamesWithShadow);
+            printWriter.println("tcutils-debug:"+debugLogging);
             printWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,6 +46,9 @@ public class TCUtilsClientModConfig {
                 }
                 if (split[0].equals("tcutils-addshadowtonames")) {
                     drawNamesWithShadow = split[1].equalsIgnoreCase("true");
+                }
+                if (split[0].equals("tcutils-debug")) {
+                    debugLogging = split[1].equalsIgnoreCase("true");
                 }
             }
             bufferedReader.close();

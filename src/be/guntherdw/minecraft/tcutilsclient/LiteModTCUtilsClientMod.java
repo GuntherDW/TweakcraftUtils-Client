@@ -70,7 +70,6 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
 
         nicksHandler = new TCUtilsClientModHandler(this);
         instance = this;
-        log.setLevel(Level.DEBUG);
     }
 
     public static LiteModTCUtilsClientMod getInstance() {
@@ -169,6 +168,8 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
     public void init(File configPath) {
         tcUtilsClientModConfig = new TCUtilsClientModConfig(mcInstance);
         tcUtilsClientModConfig.loadConfig();
+        if(TCUtilsClientModConfig.debugLogging)
+            log.setLevel(Level.DEBUG);
     }
 
     public TCUtilsClientModConfig getTCUtilsClientModConfig() {

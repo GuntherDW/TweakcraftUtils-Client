@@ -7,6 +7,7 @@ import com.mumfrey.liteloader.modconfig.ConfigPanelHost;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
@@ -69,8 +70,9 @@ public class TCUtilsClientModConfigPanel extends Gui implements ConfigPanel {
         this.controlList.clear();
         int top = 13;
 
-        addOption(0, 24, 13,                   TCUtilsClientModConfig.fullBrightNames,     "Fullbright names");
-        addOption(1, 24, 13 + CONTROL_SPACING, TCUtilsClientModConfig.drawNamesWithShadow, "Add shadow backing to names");
+        addOption(0, 24, 13,                      TCUtilsClientModConfig.fullBrightNames,     "Fullbright names");
+        addOption(1, 24, 13 + CONTROL_SPACING,    TCUtilsClientModConfig.drawNamesWithShadow, "Add shadow backing to names");
+        addOption(2, 24, 13 + CONTROL_SPACING * 2,TCUtilsClientModConfig.debugLogging,        "Enable debug logging in console");
     }
 
     /**
@@ -147,6 +149,14 @@ public class TCUtilsClientModConfigPanel extends Gui implements ConfigPanel {
                 TCUtilsClientModConfig.fullBrightNames = chk.checked;
             if(control.id == 1)
                 TCUtilsClientModConfig.drawNamesWithShadow = chk.checked;
+            if(control.id == 2) {
+                if(chk.checked) {
+                    mod.log.setLevel(Level.DEBUG);
+                } else {
+                    mod.log.setLevel(Level.INFO);
+                }
+                TCUtilsClientModConfig.debugLogging = chk.checked;
+            }
 
         }
     }
