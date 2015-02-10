@@ -158,33 +158,33 @@ public class TCUtilsClientModEvents {
                         GL11.glPushMatrix();
                         RenderHelper.disableStandardItemLighting();
                         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-                        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                        GL11.glEnable(GL11.GL_BLEND);
-                        GL11.glDisable(GL11.GL_LIGHTING);
+                        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                        GlStateManager.enableBlend();
+                        GlStateManager.disableLighting();
                         // GL11.glDepthMask(false);
                         // GL11.glDisable(GL11.GL_DEPTH_TEST);
 
                         boolean foggy = GL11.glIsEnabled(GL11.GL_FOG);
-                        GL11.glDisable(GL11.GL_FOG);
+                        GlStateManager.disableFog();
 
-                        GL11.glPushMatrix();
+                        GlStateManager.pushMatrix();
 
                         if(TCUtilsClientModConfig.drawNamesWithShadow)
                             fontRenderer.drawStringWithShadow(nick, -width, 0, -1);
                         else
                             fontRenderer.drawString(nick, -width, 0, -1);
 
-                        GL11.glPopMatrix();
+                        GlStateManager.popMatrix();
                         if (foggy) {
-                            GL11.glEnable(GL11.GL_FOG);
+                            GlStateManager.enableFog();
                         }
                         // GL11.glEnable(GL11.GL_DEPTH_TEST);
                         // GL11.glDepthMask(true);
-                        GL11.glEnable(GL11.GL_LIGHTING);
-                        GL11.glDisable(GL11.GL_BLEND);
+                        GlStateManager.enableLighting();
+                        GlStateManager.disableBlend();
 
                         RenderHelper.enableStandardItemLighting();
-                        GL11.glPopMatrix();
+                        GlStateManager.popMatrix();
                     } else {
                         fontRenderer.drawString(nick, -width, 0, -1);
                     }

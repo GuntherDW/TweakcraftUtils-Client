@@ -8,10 +8,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.awt.image.ImageObserver;
 
-
-/**
- * Created by guntherdw on 19/01/15.
- */
 public class TCUtilsClientModSkinsParser implements IImageBuffer {
     private int[] imageData;
     private int imageWidth;
@@ -43,21 +39,21 @@ public class TCUtilsClientModSkinsParser implements IImageBuffer {
 
             BufferedImage bufferedImage_temp = new BufferedImage(this.imageWidth, this.imageHeight, 2);
             Graphics graphics = bufferedImage_temp.getGraphics();
-            graphics.drawImage(bufferedImage, 0, 0, (ImageObserver) null);
+            graphics.drawImage(bufferedImage, 0, 0, null);
 
             if (imageInOldFormat) {
-                graphics.drawImage(bufferedImage_temp, 24 * multiplier, 48 * multiplier, 20 * multiplier, 52 * multiplier,  4 * multiplier, 16 * multiplier,  8 * multiplier, 20 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 28 * multiplier, 48 * multiplier, 24 * multiplier, 52 * multiplier,  8 * multiplier, 16 * multiplier, 12 * multiplier, 20 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 20 * multiplier, 52 * multiplier, 16 * multiplier, 64 * multiplier,  8 * multiplier, 20 * multiplier, 12 * multiplier, 32 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 24 * multiplier, 52 * multiplier, 20 * multiplier, 64 * multiplier,  4 * multiplier, 20 * multiplier,  8 * multiplier, 32 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 28 * multiplier, 52 * multiplier, 24 * multiplier, 64 * multiplier,  0 * multiplier, 20 * multiplier,  4 * multiplier, 32 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 32 * multiplier, 52 * multiplier, 28 * multiplier, 64 * multiplier, 12 * multiplier, 20 * multiplier, 16 * multiplier, 32 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 40 * multiplier, 48 * multiplier, 36 * multiplier, 52 * multiplier, 44 * multiplier, 16 * multiplier, 48 * multiplier, 20 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 44 * multiplier, 48 * multiplier, 40 * multiplier, 52 * multiplier, 48 * multiplier, 16 * multiplier, 52 * multiplier, 20 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 36 * multiplier, 52 * multiplier, 32 * multiplier, 64 * multiplier, 48 * multiplier, 20 * multiplier, 52 * multiplier, 32 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 40 * multiplier, 52 * multiplier, 36 * multiplier, 64 * multiplier, 44 * multiplier, 20 * multiplier, 48 * multiplier, 32 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 44 * multiplier, 52 * multiplier, 40 * multiplier, 64 * multiplier, 40 * multiplier, 20 * multiplier, 44 * multiplier, 32 * multiplier, (ImageObserver) null);
-                graphics.drawImage(bufferedImage_temp, 48 * multiplier, 52 * multiplier, 44 * multiplier, 64 * multiplier, 52 * multiplier, 20 * multiplier, 56 * multiplier, 32 * multiplier, (ImageObserver) null);
+                graphics.drawImage(bufferedImage_temp, 24 * multiplier, 48 * multiplier, 20 * multiplier, 52 * multiplier,  4 * multiplier, 16 * multiplier,  8 * multiplier, 20 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 28 * multiplier, 48 * multiplier, 24 * multiplier, 52 * multiplier,  8 * multiplier, 16 * multiplier, 12 * multiplier, 20 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 20 * multiplier, 52 * multiplier, 16 * multiplier, 64 * multiplier,  8 * multiplier, 20 * multiplier, 12 * multiplier, 32 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 24 * multiplier, 52 * multiplier, 20 * multiplier, 64 * multiplier,  4 * multiplier, 20 * multiplier,  8 * multiplier, 32 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 28 * multiplier, 52 * multiplier, 24 * multiplier, 64 * multiplier,  0             , 20 * multiplier,  4 * multiplier, 32 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 32 * multiplier, 52 * multiplier, 28 * multiplier, 64 * multiplier, 12 * multiplier, 20 * multiplier, 16 * multiplier, 32 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 40 * multiplier, 48 * multiplier, 36 * multiplier, 52 * multiplier, 44 * multiplier, 16 * multiplier, 48 * multiplier, 20 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 44 * multiplier, 48 * multiplier, 40 * multiplier, 52 * multiplier, 48 * multiplier, 16 * multiplier, 52 * multiplier, 20 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 36 * multiplier, 52 * multiplier, 32 * multiplier, 64 * multiplier, 48 * multiplier, 20 * multiplier, 52 * multiplier, 32 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 40 * multiplier, 52 * multiplier, 36 * multiplier, 64 * multiplier, 44 * multiplier, 20 * multiplier, 48 * multiplier, 32 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 44 * multiplier, 52 * multiplier, 40 * multiplier, 64 * multiplier, 40 * multiplier, 20 * multiplier, 44 * multiplier, 32 * multiplier, null);
+                graphics.drawImage(bufferedImage_temp, 48 * multiplier, 52 * multiplier, 44 * multiplier, 64 * multiplier, 52 * multiplier, 20 * multiplier, 56 * multiplier, 32 * multiplier, null);
             }
             graphics.dispose();
 

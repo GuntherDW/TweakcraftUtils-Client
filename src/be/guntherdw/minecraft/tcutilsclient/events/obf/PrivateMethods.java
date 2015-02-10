@@ -40,8 +40,8 @@ public class PrivateMethods<P, R> {
      * Creates a new private field entry
      *
      * @param owner
-     * @param mcpName
-     * @param name
+     * @param mapping
+     * @param parameterTypes
      */
     private PrivateMethods(Class<?> owner, Obf mapping, Class<?>... parameterTypes) {
         this.parentClass = owner;
