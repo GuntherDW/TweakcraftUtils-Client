@@ -1,0 +1,13 @@
+{
+    "required": true,
+    "minVersion": "0.5.5",
+    "package": "be.guntherdw.minecraft.tcutilsclient.mixin",
+    "refmap": "mixins.tcutilsclient.refmap.json",
+    "mixins": [
+        "MixinNetworkPlayerInfo",
+        "MixinRenderLivingBase"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
