@@ -1,6 +1,6 @@
 package be.guntherdw.minecraft.tcutilsclient;
 
-import be.guntherdw.minecraft.tcutilsclient.events.TCUtilsClientModHandler;
+import be.guntherdw.minecraft.tcutilsclient.handlers.TCUtilsClientModHandler;
 import be.guntherdw.minecraft.tcutilsclient.settings.TCUtilsClientModConfig;
 import be.guntherdw.minecraft.tcutilsclient.settings.TCUtilsClientModConfigPanel;
 import com.google.common.collect.ImmutableList;
@@ -16,13 +16,12 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
-import net.minecraft.network.play.server.S01PacketJoinGame;
+import net.minecraft.network.play.client.CPacketCustomPayload;
+import net.minecraft.network.play.server.SPacketJoinGame;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Logger;
 
@@ -93,7 +92,7 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
      * @param realmsServer   If connecting to a realm, a reference to the RealmsServer object
      */
     @Override
-    public void onJoinGame(INetHandler netHandler, S01PacketJoinGame joinGamePacket, ServerData serverData, RealmsServer realmsServer) {
+    public void onJoinGame(INetHandler netHandler, SPacketJoinGame joinGamePacket, ServerData serverData, RealmsServer realmsServer) {
         log.info("New server/game joined, sending new getDump packets in 10 gameTicks.");
         curChannel = null;
         sendRegisterPacket = true;
@@ -102,37 +101,37 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
         nicksHandler.reInit();
     }
 
-    public C17PacketCustomPayload getImprovChatRegisterPacket() {
+    public CPacketCustomPayload getImprovChatRegisterPacket() {
         byte[] data = new byte[1];
         data[0] = (byte) 26;
 
         PacketBuffer pb = new PacketBuffer(Unpooled.buffer());
         pb.writeBytes(data);
 
-        return new C17PacketCustomPayload(IMPROVCHAT_CHANNEL, pb);
+        return new CPacketCustomPayload(IMPROVCHAT_CHANNEL, pb);
     }
 
-    public C17PacketCustomPayload getTCUtilsNickRegisterPacket() {
+    public CPacketCustomPayload getTCUtilsNickRegisterPacket() {
         byte[] data = new byte[1];
         data[0] = (byte) 51;
 
         PacketBuffer pb = new PacketBuffer(Unpooled.buffer());
         pb.writeBytes(data);
 
-        return new C17PacketCustomPayload(TCNICK_CHANNEL, pb);
+        return new CPacketCustomPayload(TCNICK_CHANNEL, pb);
     }
 
-    public C17PacketCustomPayload getTCUtilsNickRequestNickPacket(String playername) {
+    public CPacketCustomPayload getTCUtilsNickRequestNickPacket(String playername) {
 
         PacketBuffer pb = new PacketBuffer(Unpooled.buffer());
         pb.writeByte((byte) 53);
         try {
             pb.writeBytes(playername.getBytes("UTF-8"));
         } catch (Exception e) { }
-        return new C17PacketCustomPayload(TCNICK_CHANNEL, pb);
+        return new CPacketCustomPayload(TCNICK_CHANNEL, pb);
     }
 
-    public C17PacketCustomPayload getTCUtilsNickRequestNickPacket(List<String> list) {
+    public CPacketCustomPayload getTCUtilsNickRequestNickPacket(List<String> list) {
 
         PacketBuffer pb = new PacketBuffer(Unpooled.buffer());
         pb.writeByte((byte) 54);
@@ -142,7 +141,7 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
                 pb.writeByte((byte) 0);
             }
         } catch (Exception e) { }
-        return new C17PacketCustomPayload(TCNICK_CHANNEL, pb);
+        return new CPacketCustomPayload(TCNICK_CHANNEL, pb);
     }
 
     /**
@@ -288,7 +287,7 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
         if(!inGame) return;
 
         if (mcInstance.ingameGUI.getChatGUI().getChatOpen() && curChannel != null) {
-            ScaledResolution scaledResolution = new ScaledResolution(mcInstance, mcInstance.displayWidth, mcInstance.displayHeight);
+            ScaledResolution scaledResolution = new ScaledResolution(mcInstance);
             int x1, x2;
             int y1, y2;
 
@@ -302,8 +301,8 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
         }
 
         if(!checked) {
-            log.debug("Is improvedchat enabled serverside? : " + LiteLoader.getClientPluginChannels().isRemoteChannelRegistered(IMPROVCHAT_CHANNEL));
-            log.debug("Is tcutils enabled serverside? : " + LiteLoader.getClientPluginChannels().isRemoteChannelRegistered(TCNICK_CHANNEL));
+            log.info("Is improvedchat enabled serverside? : " + LiteLoader.getClientPluginChannels().isRemoteChannelRegistered(IMPROVCHAT_CHANNEL));
+            log.info("Is tcutils enabled serverside? : " + LiteLoader.getClientPluginChannels().isRemoteChannelRegistered(TCNICK_CHANNEL));
             checked = true;
         }
 
@@ -331,7 +330,7 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
 
         if(shouldSendPackets) {
             if(delayedAsk == 0) {
-                log.debug("Asking for nicks (" + listToString(nicksHandler.getToAsk()) + ")");
+                log.info("Asking for nicks (" + listToString(nicksHandler.getToAsk()) + ")");
                 Minecraft.getMinecraft().getNetHandler().addToSendQueue(getTCUtilsNickRequestNickPacket(nicksHandler.getToAsk()));
                 nicksHandler.clearToAsk();
                 shouldSendPackets = false;

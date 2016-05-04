@@ -1,4 +1,4 @@
-package be.guntherdw.minecraft.tcutilsclient.events;
+package be.guntherdw.minecraft.tcutilsclient.handlers;
 
 import be.guntherdw.minecraft.tcutilsclient.LiteModTCUtilsClientMod;
 import net.minecraft.client.renderer.IImageBuffer;
