@@ -27,7 +27,6 @@ public abstract class MixinRenderLivingBase<T extends EntityLivingBase> extends 
         super(p_i46179_1_);
     }
 
- // @Inject(method = "renderName(Lnet/minecraft/entity/Entity;DDD)V", at = @At("HEAD"))
     @Inject(method = "renderName(Lnet/minecraft/entity/EntityLivingBase;DDD)V", at = @At("HEAD"), cancellable = true)
     private void onRenderName(T entity, double x, double y, double z, CallbackInfo ci) {
         if (!(entity instanceof EntityOtherPlayerMP)) {

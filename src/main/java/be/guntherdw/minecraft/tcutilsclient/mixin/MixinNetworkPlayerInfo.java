@@ -39,24 +39,14 @@ public abstract class MixinNetworkPlayerInfo {
             ResourceLocation rl = new ResourceLocation(resourceurl);
             TextureManager tm = Minecraft.getMinecraft().getTextureManager();
             ITextureObject ito = tm.getTexture(rl);
+            final TCUtilsClientModSkinsParser tcUtilsClientModSkinsParser = new TCUtilsClientModSkinsParser();
 
             if (ito == null) {
-                LiteModTCUtilsClientMod.getInstance().log.debug("Getting new cape for " + playerName + " from " + url);
-                ito = new ThreadDownloadImageData(null, url, null, new IImageBuffer() {
-                    @Override
-                    public BufferedImage parseUserSkin(BufferedImage bufferedImage) {
-                        return bufferedImage;
-                    }
-
-                    @Override
-                    public void skinAvailable() {
-                    }
-                });
+                LiteModTCUtilsClientMod.getInstance().log.info("Getting new cape for " + playerName + " from " + url);
+                ito = new ThreadDownloadImageData(null, url, null, tcUtilsClientModSkinsParser.returnCapeIImageBuffer());
                 tm.loadTexture(rl, ito);
             }
 
-            // returnEventInfo.setReturnValue(rl);
-            // returnEventInfo.cancel();
             ci.setReturnValue(rl);
             ci.cancel();
         }
@@ -64,39 +54,30 @@ public abstract class MixinNetworkPlayerInfo {
 
     @Inject(method = "getLocationSkin()Lnet/minecraft/util/ResourceLocation;", at = @At("HEAD"), cancellable = true)
     private void onGetLocationSkin(CallbackInfoReturnable<ResourceLocation> ci) {
+
         TCUtilsClientModHandler nh = LiteModTCUtilsClientMod.getInstance().getNicksHandler();
         String playerName = getGameProfile().getName();
+
         if (nh.getSkins().containsKey(playerName)) {
             String resourceurl = "tcutils:hdskins/" + playerName.toLowerCase();
             String url = nh.getSkins().get(playerName);
             ResourceLocation rl = new ResourceLocation(resourceurl);
             TextureManager tm = Minecraft.getMinecraft().getTextureManager();
             final TCUtilsClientModSkinsParser tcUtilsClientModSkinsParser = new TCUtilsClientModSkinsParser();
-            final ImageBufferDownload imageBufferDownload = new ImageBufferDownload();
+            // final ImageBufferDownload imageBufferDownload = new ImageBufferDownload();
             ITextureObject ito = tm.getTexture(rl);
 
             if (ito == null) {
-                LiteModTCUtilsClientMod.getInstance().log.debug("Getting new skin for " + playerName + " from " + url);
-                ito = new ThreadDownloadImageData(null, url, DefaultPlayerSkin.getDefaultSkinLegacy(), new IImageBuffer() {
-                    @Override
-                    public BufferedImage parseUserSkin(BufferedImage bufferedImage) {
-                        bufferedImage = tcUtilsClientModSkinsParser.parseUserSkin(bufferedImage);
-                        return bufferedImage;
-                    }
+                LiteModTCUtilsClientMod.getInstance().log.info("Getting new skin for " + playerName + " from " + url);
 
-                    @Override
-                    public void skinAvailable() {
-                        tcUtilsClientModSkinsParser.skinAvailable();
-                    }
-                });
+                ito = new ThreadDownloadImageData(null, url, DefaultPlayerSkin.getDefaultSkinLegacy(), TCUtilsClientModSkinsParser.returnSkinIImageBuffer(tcUtilsClientModSkinsParser));
                 tm.loadTexture(rl, ito);
-                // source.getSkinType()
             }
-
 
             ci.setReturnValue(rl);
             ci.cancel();
         }
+
     }
 
 

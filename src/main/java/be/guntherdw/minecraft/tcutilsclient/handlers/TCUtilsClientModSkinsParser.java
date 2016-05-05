@@ -2,6 +2,8 @@ package be.guntherdw.minecraft.tcutilsclient.handlers;
 
 import be.guntherdw.minecraft.tcutilsclient.LiteModTCUtilsClientMod;
 import net.minecraft.client.renderer.IImageBuffer;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -74,6 +76,46 @@ public class TCUtilsClientModSkinsParser implements IImageBuffer {
 
     public void skinAvailable() {
     }
+
+    /*
+     * Temporary fixes because Mixin can't handle internal classes....
+     */
+    public static IImageBuffer returnSkinIImageBuffer(final TCUtilsClientModSkinsParser instance) {
+
+        IImageBuffer ib = new IImageBuffer() {
+            @Override
+            public BufferedImage parseUserSkin(BufferedImage bufferedImage) {
+                bufferedImage = instance.parseUserSkin(bufferedImage);
+                return bufferedImage;
+            }
+
+            @Override
+            public void skinAvailable() {
+                instance.skinAvailable();
+            }
+        };
+
+        return ib;
+
+    }
+
+    public static IImageBuffer returnCapeIImageBuffer() {
+        IImageBuffer ib = new IImageBuffer() {
+            @Override
+            public BufferedImage parseUserSkin(BufferedImage bufferedImage) {
+                return bufferedImage;
+            }
+
+            @Override
+            public void skinAvailable() {
+            }
+        };
+
+        return ib;
+    }
+    /*
+     * END of temporary fixes
+     */
 
     /**
      * Makes the given area of the image transparent if it was previously completely opaque (used to remove the outer
