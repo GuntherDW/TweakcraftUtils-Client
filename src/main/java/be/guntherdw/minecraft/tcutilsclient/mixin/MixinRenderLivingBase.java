@@ -2,9 +2,12 @@ package be.guntherdw.minecraft.tcutilsclient.mixin;
 
 import be.guntherdw.minecraft.tcutilsclient.LiteModTCUtilsClientMod;
 import be.guntherdw.minecraft.tcutilsclient.handlers.TCUtilsClientModHandler;
+import be.guntherdw.minecraft.tcutilsclient.settings.TCUtilsClientModConfig;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
@@ -12,6 +15,7 @@ import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -51,17 +55,17 @@ public abstract class MixinRenderLivingBase<T extends EntityLivingBase> extends 
             if (distanceSqToEntity < (double) (maxDistance * maxDistance)) {
                 // String lvt_11_1_ = entity.getDisplayName().getFormattedText();
                 GlStateManager.alphaFunc(516, 0.1F);
-                this.renderEntityName_tcutilsclient(entity, x, y, z, nick, distanceSqToEntity, 64);
+                this.renderEntityName_tcutilsclient(entity, x, y, z, nick, distanceSqToEntity, 64, hasNick);
             }
         }
     }
 
-    private void renderEntityName_tcutilsclient(T entity, double x, double y, double z, String displayName, double distance, int maxDistance) {
+    private void renderEntityName_tcutilsclient(T entity, double x, double y, double z, String displayName, double distance, int maxDistance, boolean hasNick) {
         double lvt_10_1_ = entity.getDistanceSqToEntity(this.renderManager.livingPlayer);
         if (lvt_10_1_ <= (double) (maxDistance * maxDistance)) {
-            boolean lvt_12_1_ = entity.isSneaking();
+            boolean isSneaking = entity.isSneaking();
             GlStateManager.pushMatrix();
-            float lvt_13_1_ = lvt_12_1_ ? 0.25F : 0.0F;
+            float lvt_13_1_ = isSneaking ? 0.25F : 0.0F;
             GlStateManager.translate((float) x, (float) y + entity.height + 0.5F - lvt_13_1_, (float) z);
             GlStateManager.glNormal3f(0.0F, 1.0F, 0.0F);
             GlStateManager.rotate(-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
@@ -69,7 +73,7 @@ public abstract class MixinRenderLivingBase<T extends EntityLivingBase> extends 
             GlStateManager.scale(-0.025F, -0.025F, 0.025F);
             GlStateManager.disableLighting();
             GlStateManager.depthMask(false);
-            if (!lvt_12_1_) {
+            if (!isSneaking) {
                 GlStateManager.disableDepth();
             }
 
@@ -88,13 +92,49 @@ public abstract class MixinRenderLivingBase<T extends EntityLivingBase> extends 
             vertexBuffer.pos((double) (width + 1), (double) (-1 + extraHeight), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
             tesselator.draw();
             GlStateManager.enableTexture2D();
-            if (!lvt_12_1_) {
+            if (!isSneaking) {
                 fontRenderer.drawString(displayName, -fontRenderer.getStringWidth(displayName) / 2, extraHeight, 553648127);
                 GlStateManager.enableDepth();
             }
 
             GlStateManager.depthMask(true);
-            fontRenderer.drawString(displayName, -fontRenderer.getStringWidth(displayName) / 2, extraHeight, lvt_12_1_ ? 553648127 : -1);
+            fontRenderer.drawString(displayName, -fontRenderer.getStringWidth(displayName) / 2, extraHeight, isSneaking ? 553648127 : -1);
+
+            if (hasNick && TCUtilsClientModConfig.fullBrightNames) {
+                GL11.glPushMatrix();
+                RenderHelper.disableStandardItemLighting();
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+                GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                GlStateManager.enableBlend();
+                GlStateManager.disableLighting();
+                // GL11.glDepthMask(false);
+                // GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+                boolean foggy = GL11.glIsEnabled(GL11.GL_FOG);
+                GlStateManager.disableFog();
+
+                GlStateManager.pushMatrix();
+
+                if (TCUtilsClientModConfig.drawNamesWithShadow)
+                    fontRenderer.drawStringWithShadow(displayName, -width, 0, -1);
+                else
+                    fontRenderer.drawString(displayName, -width, 0, -1);
+
+                GlStateManager.popMatrix();
+                if (foggy) {
+                    GlStateManager.enableFog();
+                }
+                // GL11.glEnable(GL11.GL_DEPTH_TEST);
+                // GL11.glDepthMask(true);
+                GlStateManager.enableLighting();
+                GlStateManager.disableBlend();
+
+                RenderHelper.enableStandardItemLighting();
+                GlStateManager.popMatrix();
+            } else {
+                fontRenderer.drawString(displayName, -width, 0, -1);
+            }
+
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
