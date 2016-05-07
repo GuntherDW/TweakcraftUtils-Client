@@ -25,14 +25,16 @@ public abstract class MixinNetworkPlayerInfo {
 
     @Shadow abstract GameProfile getGameProfile();
 
+    private final String resourceDomain = "tcutils";
+
     @Inject(method = "getLocationCape()Lnet/minecraft/util/ResourceLocation;", at = @At("HEAD"), cancellable = true)
     private void onGetLocationCape(CallbackInfoReturnable<ResourceLocation> ci) {
         TCUtilsClientModHandler nh = LiteModTCUtilsClientMod.getInstance().getNicksHandler();
         String playerName = getGameProfile().getName();
         if (nh.getCapes().containsKey(playerName)) {
-            String resourceurl = "tcutils:capes/" + playerName.toLowerCase();
+            String resource = "capes/" + playerName.toLowerCase();
             String url = nh.getCapes().get(playerName);
-            ResourceLocation rl = new ResourceLocation(resourceurl);
+            ResourceLocation rl = new ResourceLocation(resourceDomain, resource);
             TextureManager tm = Minecraft.getMinecraft().getTextureManager();
             ITextureObject ito = tm.getTexture(rl);
             final TCUtilsClientModSkinsParser tcUtilsClientModSkinsParser = new TCUtilsClientModSkinsParser();
@@ -55,9 +57,9 @@ public abstract class MixinNetworkPlayerInfo {
         String playerName = getGameProfile().getName();
 
         if (nh.getSkins().containsKey(playerName)) {
-            String resourceurl = "tcutils:hdskins/" + playerName.toLowerCase();
+            String resourceurl = "hdskins/" + playerName.toLowerCase();
             String url = nh.getSkins().get(playerName);
-            ResourceLocation rl = new ResourceLocation(resourceurl);
+            ResourceLocation rl = new ResourceLocation(resourceDomain, resourceurl);
             TextureManager tm = Minecraft.getMinecraft().getTextureManager();
             final TCUtilsClientModSkinsParser tcUtilsClientModSkinsParser = new TCUtilsClientModSkinsParser();
             // final ImageBufferDownload imageBufferDownload = new ImageBufferDownload();
@@ -75,7 +77,4 @@ public abstract class MixinNetworkPlayerInfo {
         }
 
     }
-
-
-
 }
