@@ -27,8 +27,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(RenderLivingBase.class)
 public abstract class MixinRenderLivingBase<T extends EntityLivingBase> extends Render<T> {
 
-    protected MixinRenderLivingBase(RenderManager p_i46179_1_) {
-        super(p_i46179_1_);
+    protected MixinRenderLivingBase(RenderManager renderManagerIn) {
+        super(renderManagerIn);
     }
 
     @Inject(method = "renderName(Lnet/minecraft/entity/EntityLivingBase;DDD)V", at = @At("HEAD"), cancellable = true)
@@ -50,7 +50,7 @@ public abstract class MixinRenderLivingBase<T extends EntityLivingBase> extends 
         }
 
         if (this.canRenderName(entity)) {
-            double distanceSqToEntity = entity.getDistanceSqToEntity(this.renderManager.livingPlayer);
+            double distanceSqToEntity = entity.getDistanceSqToEntity(this.renderManager.renderViewEntity);
             float maxDistance = entity.isSneaking() ? 32.0F : 64.0F;
             if (distanceSqToEntity < (double) (maxDistance * maxDistance)) {
                 // String lvt_11_1_ = entity.getDisplayName().getFormattedText();
@@ -61,7 +61,7 @@ public abstract class MixinRenderLivingBase<T extends EntityLivingBase> extends 
     }
 
     private void renderEntityName_tcutilsclient(T entity, double x, double y, double z, String displayName, double distance, int maxDistance, boolean hasNick) {
-        double lvt_10_1_ = entity.getDistanceSqToEntity(this.renderManager.livingPlayer);
+        double lvt_10_1_ = entity.getDistanceSqToEntity(this.renderManager.renderViewEntity);
         if (lvt_10_1_ <= (double) (maxDistance * maxDistance)) {
             boolean isSneaking = entity.isSneaking();
             GlStateManager.pushMatrix();
