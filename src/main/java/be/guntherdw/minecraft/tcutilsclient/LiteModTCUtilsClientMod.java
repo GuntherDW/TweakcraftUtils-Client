@@ -312,12 +312,12 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
         if(sendRegisterPacket) {
             if(delayedHelo == 0) {
                 if(LiteLoader.getClientPluginChannels().isRemoteChannelRegistered(IMPROVCHAT_CHANNEL)) {
-                    Minecraft.getMinecraft().getNetHandler().addToSendQueue(getImprovChatRegisterPacket());
+                    Minecraft.getMinecraft().getConnection().sendPacket(getImprovChatRegisterPacket());
                 } else {
                     log.warn("Not sending improvedchat 'getDump' because it is not enabled serverside!");
                 }
                 if(LiteLoader.getClientPluginChannels().isRemoteChannelRegistered(TCNICK_CHANNEL)) {
-                    Minecraft.getMinecraft().getNetHandler().addToSendQueue(getTCUtilsNickRegisterPacket());
+                    Minecraft.getMinecraft().getConnection().sendPacket(getTCUtilsNickRegisterPacket());
                 } else {
                     log.warn("Not sending tcutils 'getDump' because it is not enabled serverside!");
                 }
@@ -331,7 +331,7 @@ public class LiteModTCUtilsClientMod implements PluginChannelListener, Configura
         if(shouldSendPackets) {
             if(delayedAsk == 0) {
                 log.info("Asking for nicks (" + listToString(nicksHandler.getToAsk()) + ")");
-                Minecraft.getMinecraft().getNetHandler().addToSendQueue(getTCUtilsNickRequestNickPacket(nicksHandler.getToAsk()));
+                Minecraft.getMinecraft().getConnection().sendPacket(getTCUtilsNickRequestNickPacket(nicksHandler.getToAsk()));
                 nicksHandler.clearToAsk();
                 shouldSendPackets = false;
             } else {

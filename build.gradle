@@ -24,13 +24,13 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "1.0"
+version = "1.0.1"
 group = "be.guntherdw.minecraft.tcutilsclient" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "tcutilsclient"
 
 minecraft {
-    version = "1.9"
-    mappings = "snapshot_20160410"
+    version = "1.9.4"
+    mappings = "snapshot_20160518"
     runDir = "run"
 }
 
@@ -48,8 +48,8 @@ mixin {
 litemod {
     json {
         name = "TCUtils-Clientmod"
-        mcversion = "1.9.0"
-        version = "1.0"
+        mcversion = "1.9.4"
+        version = "1.0.1"
         author = "Tweakcraft.net"
         description = "A small clientside mod to go alongside the server mods"
 
